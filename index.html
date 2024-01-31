@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday!</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #000000;
+      /* Black background */
+      overflow: hidden;
+      /* Hide overflow for confetti */
+      position: relative;
+      color: white;
+    }
+
+    #stage {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    #curtain-left,
+    #curtain-right {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      width: 50%;
+      background-color: #ff0000;
+      animation: curtain-open 5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      /* Adjust the cubic-bezier values */
+    }
+
+    #curtain-left {
+      left: 0;
+      transform-origin: left center;
+    }
+
+    #curtain-right {
+      right: 0;
+      transform-origin: right center;
+    }
+
+    @keyframes curtain-open {
+      to {
+        transform: scaleX(0);
+      }
+    }
+
+    #birthday-container {
+      text-align: center;
+      position: absolute;
+      z-index: -1;
+      width: 100%;
+      opacity: 0;
+      animation: fadeIn 2s forwards;
+    }
+
+    h1 {
+      color: #ff4500;
+      margin: 0% 1%;
+      margin-top: 3%;
+      opacity: 1;
+      /* Set initial opacity to 1 */
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    #confetti-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 3;
+      /* Set z-index higher than party pop-ups */
+    }
+
+    .confetti {
+      width: 10px;
+      height: 10px;
+      background-color: #ff4500;
+      position: absolute;
+      border-radius: 50%;
+      animation: confetti-fall linear infinite;
+      z-index: 2;
+      /* Set z-index lower than party pop-ups */
+    }
+
+    @keyframes confetti-fall {
+      0% {
+        transform: translateY(15vh) rotate(0deg);
+      }
+
+      100% {
+        transform: translateY(100vh) rotate(360deg);
+      }
+    }
+
+    #photo-container {
+      position: absolute;
+      top: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: -2;
+      opacity: 0;
+      animation: fadeInPhoto 2s forwards;
+    }
+
+    @keyframes fadeInPhoto {
+      50% {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    #lighting {
+      position: absolute;
+      top: -100vh;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 70%);
+      animation: lighting-fade 5s forwards;
+    }
+
+    @keyframes lighting-fade {
+      0% {
+        top: -100vh;
+      }
+
+      50% {
+        top: 0;
+      }
+
+      100% {
+        top: -100vh;
+        opacity: 0;
+      }
+    }
+
+    .party-popup {
+      position: absolute;
+      top: 35%;
+      transform: translateY(-50%);
+      width: 30vw;
+      height: 30vh;
+      opacity: 0;
+      z-index: -2;
+      /* Set z-index lower than other elements */
+      transition: opacity 0.5s ease-in-out;
+      pointer-events: none;
+      /* Add this line to make sure clicks go through the popup */
+      box-shadow: none;
+      /* Remove the glowing border */
+    }
+
+    .party-popup img {
+      width: 100%;
+      height: 100%;
+    }
+
+    .party-popup.left {
+      left: 0;
+      background-color: black;
+      animation: fadeInPopupLeft 5s forwards;
+    }
+
+    .party-popup.right {
+      right: 0;
+      background-color: black;
+      animation: fadeInPopupRight 5s forwards;
+    }
+
+    .party-popup.active {
+      opacity: 1;
+    }
+
+    @keyframes fadeInPopupLeft {
+      0% {
+        transform: translateX(-100%);
+      }
+
+      100% {
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes fadeInPopupRight {
+      0% {
+        transform: translateX(100%);
+      }
+
+      100% {
+        transform: translateX(0);
+      }
+    }
+
+    #gallery-body {
+      margin: 0;
+      height: 150vh;
+      display: grid;
+      place-items: center;
+      opacity: 0;
+    }
+
+    .gallery {
+      position: relative;
+      width: 75px;
+      height: 100px;
+      transform-style: preserve-3d;
+      animation: rotate 35s linear infinite;
+      z-index: -2;
+    }
+
+    @keyframes rotate {
+      from {
+        transform: perspective(1200px) rotateY(0deg);
+      }
+
+      to {
+        transform: perspective(1200px) rotateY(360deg);
+      }
+    }
+
+    .gallery span {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      transform-origin: center;
+      transform-style: preserve-3d;
+      transform: rotateY(calc(var(--i) * 45deg)) translateZ(100px);
+    }
+
+    .gallery span img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit:contain;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="stage">
+    <div id="curtain-left"></div>
+    <div id="curtain-right"></div>
+
+    <div id="lighting"></div>
+
+    <div id="birthday-container">
+      <h1>Happy Birthday, Surbhi</h1>
+      <p>Wishing you a day filled with joy and laughter!</p>
+      <div id="confetti-container"></div>
+    </div>
+
+    <div id="photo-container">
+      <img src="surbhi.png" alt="Friend's Photo" style="width: 100%; height: auto; max-height: 60vh;">
+    </div>
+
+    <div class="party-popup left">
+      <img src="cracker.gif" alt="Party Pop-up Left">
+    </div>
+
+    <div class="party-popup right">
+      <img src="cracker.gif" alt="Party Pop-up Right">
+    </div>
+
+    <div id="gallery-body">
+      <div class="gallery">
+        <span style="--i:1">
+          <img src="suru1.png" alt="" />
+        </span>
+        <span style="--i:2">
+          <img src="suru2.png" alt="" />
+        </span>
+        <span style="--i:3">
+          <img src="suru3.png" alt="" />
+        </span>
+        <span style="--i:4">
+          <img src="suru4.png" alt="" />
+        </span>
+        <span style="--i:5">
+          <img src="suru5.png" alt="" />
+        </span>
+        <span style="--i:6">
+          <img src="suru6.png" alt="" />
+        </span>
+        <span style="--i:7">
+          <img src="suru7.png" alt="" />
+        </span>
+        <span style="--i:8">
+          <img src="suru8.png" alt="" />
+        </span>
+      </div>
+    </div>
+
+    <script>
+      // Add confetti elements to the container
+      const confettiContainer = document.getElementById('confetti-container');
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = `${Math.random() * 100}%`;
+        confetti.style.animationDuration = `${Math.random() * 2 + 1}s`;
+        confettiContainer.appendChild(confetti);
+      }
+
+      // Trigger text animation when curtain opens fully
+      const curtainLeft = document.getElementById('curtain-left');
+      curtainLeft.addEventListener('animationend', () => {
+        document.querySelector('.party-popup.left').classList.add('active');
+        document.querySelector('.party-popup.right').classList.add('active');
+        document.getElementById('gallery-body').style.opacity = 1;
+      });
+
+      // Trigger confetti animation when curtain starts opening
+      const curtainRight = document.getElementById('curtain-right');
+      curtainRight.addEventListener('animationstart', () => {
+        confettiContainer.style.animation = 'confetti-fall linear infinite';
+      });
+    </script>
+</body>
+
+</html>
